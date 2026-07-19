@@ -1,0 +1,28 @@
+title: Multiple Failed Logins - Possible Brute Force Attack
+id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+status: experimental
+description: >
+    Detects multiple failed login attempts from the same source IP
+    within a short time window, which may indicate a brute force attack.
+author: Zulfiana Rahmi
+date: 2026/07/20
+modified: 2026/07/20
+tags:
+    - attack.credential_access
+    - attack.t1110
+    - attack.t1110.001
+logsource:
+    product: linux
+    service: auth
+detection:
+    selection:
+        message|contains:
+            - 'Failed password'
+            - 'authentication failure'
+    timeframe: 5m
+    condition: selection | count() > 5
+falsepositives:
+    - User forgot password
+    - Misconfigured service
+    - Legitimate automated scanner
+level: medium

@@ -1,0 +1,29 @@
+title: Possible SQL Injection Attempt in Web Request
+id: c3d4e5f6-a7b8-9012-cdef-345678901234
+status: experimental
+description: >
+    Detects SQL injection patterns in web server access logs,
+    indicating potential database attack attempts.
+author: Zulfiana Rahmi
+date: 2026/07/20
+modified: 2026/07/20
+tags:
+    - attack.initial_access
+    - attack.t1190
+logsource:
+    product: linux
+    service: webserver
+detection:
+    selection:
+        message|contains:
+            - "' OR '1'='1"
+            - "UNION SELECT"
+            - "/* */"
+            - "'; DROP TABLE"
+            - "' OR 1=1--"
+            - "xp_cmdshell"
+    condition: selection
+falsepositives:
+    - Legitimate database admin tools
+    - Security scanners (authorized)
+level: high

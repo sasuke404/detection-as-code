@@ -1,0 +1,54 @@
+title: CISA Alert AA26-194A - Suspicious Router Configuration Modification
+id: 7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d
+status: experimental
+description: >
+    Detects suspicious router configuration changes that may indicate
+    exploitation by Russian state-sponsored threat actors (Turla/APT29).
+    Based on CISA Alert AA26-194A - Russian state-sponsored targeting of
+    routers for surveillance and network traffic manipulation.
+    Reference: https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-194a
+author: Zulfiana Rahmi
+date: 2026/07/14
+modified: 2026/07/14
+references:
+    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-194a
+    - https://attack.mitre.org/techniques/T1098/
+tags:
+    - attack.persistence
+    - attack.t1098
+    - attack.t1098.001
+    - attack.g0010
+logsource:
+    product: network
+    service: router
+detection:
+    selection:
+        message|contains:
+            - 'configure terminal'
+            - 'conf t'
+            - 'write memory'
+            - 'copy running-config startup-config'
+            - 'access-list'
+            - 'route-map'
+            - 'ip route'
+            - 'snmp-server community'
+            - 'enable secret'
+            - 'username'
+            - 'privilege 15'
+            - 'secret 0'
+            - 'crypto pki'
+            - 'ip ssh'
+            - 'tacacs-server'
+            - 'no logging'
+            - 'logging buffered 0'
+            - 'clear logging'
+    filter_legitimate:
+        source|contains:
+            - 'netadmin'
+            - 'sysadmin'
+    condition: selection and not filter_legitimate
+falsepositives:
+    - Legitimate network administrator changes
+    - Scheduled configuration backup
+    - Network automation tools (Ansible, RANCID)
+level: critical

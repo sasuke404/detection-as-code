@@ -1,0 +1,51 @@
+title: CISA Alert - Router Implant Persistence - LolBin Usage
+id: 0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a
+status: experimental
+description: >
+    Detects threat actors using legitimate network device features (LolBins -
+    Living off the Land Binaries) for persistence on network infrastructure
+    devices. Associated with APT actors targeting routers and switches
+    after initial compromise. Common Turla/Salt Typhoon persistence techniques.
+    Based on CISA AA26-194A and recent telecom infrastructure targeting.
+author: Zulfiana Rahmi
+date: 2026/07/14
+modified: 2026/07/14
+references:
+    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-194a
+tags:
+    - attack.persistence
+    - attack.t1098
+    - attack.defense_evasion
+    - attack.t1070
+logsource:
+    product: network
+    service: router
+detection:
+    selection_snmp_modification:
+        message|contains:
+            - 'snmp-server community'
+            - 'snmp-server host'
+            - 'snmp-server enable traps'
+    selection_ssh_changes:
+        message|contains:
+            - 'ip ssh server'
+            - 'ip ssh authentication-retries'
+            - 'crypto key generate rsa'
+            - 'ip scp server enable'
+    selection_account_creation:
+        message|contains:
+            - 'username'
+            - 'privilege 15'
+            - 'secret 0'
+            - 'secret 5'
+    selection_logging_disable:
+        message|contains:
+            - 'no logging'
+            - 'logging buffered 0'
+            - 'clear logging'
+    condition: 1 of selection_*
+falsepositives:
+    - Legitimate network admin activity
+    - Initial device configuration
+    - Network team password rotation
+level: high

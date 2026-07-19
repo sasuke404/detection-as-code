@@ -1,0 +1,5 @@
+# Python dependencies
+pyyaml>=6.0
+requests>=2.28.0
+pytest>=7.0.0
+sigmatools>=0.20.0

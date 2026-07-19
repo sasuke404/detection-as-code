@@ -1,0 +1,51 @@
+title: Salt Typhoon Activity - Suspicious Telecom Network Reconnaissance
+id: 9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f
+status: experimental
+description: >
+    Detects reconnaissance patterns associated with Salt Typhoon APT group
+    targeting telecommunications providers for intelligence collection.
+    Salt Typhoon (also known as GhostEmperor, FamousSparrow) has been
+    actively compromising ISPs and telecom infrastructure worldwide.
+    Indicators: unusual SNMP queries, configuration access, and CPE device
+    enumeration from non-internal IPs.
+author: Zulfiana Rahmi
+date: 2026/07/10
+modified: 2026/07/14
+references:
+    - https://www.cisa.gov/news-events/cybersecurity-advisories
+    - https://attack.mitre.org/groups/G1045/
+tags:
+    - attack.discovery
+    - attack.t1046
+    - attack.t1087
+    - attack.g1045
+logsource:
+    product: network
+    service: firewall
+detection:
+    selection:
+        message|contains:
+            - 'SNMP'
+            - 'udp/161'
+            - 'udp/162'
+            - 'telnet'
+            - 'port 22'
+            - 'port 23'
+            - 'port 161'
+            - 'port 830'
+            - 'nmap'
+            - 'masscan'
+            - 'zmap'
+            - 'routersploit'
+            - 'mirai'
+    filter_internal:
+        src_ip|cidr:
+            - '10.0.0.0/8'
+            - '192.168.0.0/16'
+            - '172.16.0.0/12'
+    condition: selection and not filter_internal
+falsepositives:
+    - Authorized network inventory scans
+    - ISP infrastructure monitoring
+    - Penetration testing (scheduled)
+level: high

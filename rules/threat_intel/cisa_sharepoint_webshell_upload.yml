@@ -1,0 +1,45 @@
+title: CISA Alert - SharePoint Exploitation - Suspicious Web Shell Upload
+id: 8b9c0d1e-2f3a-4b5c-6d7e-8f9a0b1c2d3e
+status: experimental
+description: >
+    Detects potential exploitation of Microsoft SharePoint vulnerabilities
+    leading to web shell upload. Based on recent CISA advisory about active
+    exploitation of SharePoint servers by threat actors deploying web shells
+    for persistent access and data exfiltration.
+    Reference: CISA SharePoint Hardening Advisory July 2026
+author: Zulfiana Rahmi
+date: 2026/07/14
+modified: 2026/07/14
+references:
+    - https://www.cisa.gov/news-events/alerts/2026/07/14/cisa-urges-sharepoint-hardening-after-new-exploitations
+tags:
+    - attack.initial_access
+    - attack.t1190
+    - attack.persistence
+    - attack.t1505.003
+logsource:
+    product: windows
+    service: iis
+detection:
+    selection:
+        message|contains:
+            - '/_layouts/'
+            - '/_vti_bin/'
+            - '/_catalogs/'
+            - '/aspnet_client/'
+            - '.aspx'
+            - '.ashx'
+            - '.asmx'
+            - '.asp'
+            - 'python-requests'
+            - 'curl'
+            - 'wget'
+            - 'nikto'
+            - 'sqlmap'
+            - 'nuclei'
+    condition: selection
+falsepositives:
+    - Legitimate SharePoint admin uploads
+    - SharePoint feature installation
+    - Authorized security scanning
+level: critical
