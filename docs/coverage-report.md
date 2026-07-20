@@ -1,6 +1,6 @@
 # MITRE ATT&CK Coverage Report
 
-> Generated: 2026-07-20 08:54
+> Generated: 2026-07-20 08:56
 > Total Rules: 7
 > Covered Techniques: 11
 > Covered Tactics: 6
