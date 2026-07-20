@@ -60,32 +60,3 @@ jobs:
       with:
         name: wazuh-rules
         path: wazuh_rules/
-
-  deploy:
-    needs: test-and-convert
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyyaml requests
-
-    - name: Convert Sigma to Wazuh
-      run: python scripts/convert.py
-
-    - name: Deploy to Wazuh
-      env:
-        WAZUH_API_URL: ${{ secrets.WAZUH_API_URL }}
-        WAZUH_API_USER: ${{ secrets.WAZUH_API_USER }}
-        WAZUH_API_PASS: ${{ secrets.WAZUH_API_PASS }}
-      run: python scripts/deploy.py
