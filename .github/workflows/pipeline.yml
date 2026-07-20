@@ -52,11 +52,20 @@ jobs:
     - name: Run Rule Tests
       run: python scripts/test_rules.py
 
+    - name: MITRE ATT&CK Coverage Report
+      run: python scripts/coverage.py
+
+    - name: Rule Quality Check
+      run: python scripts/quality_check.py
+
     - name: Convert Sigma to Wazuh
       run: python scripts/convert.py
 
-    - name: Upload Wazuh Rules Artifact
+    - name: Upload Reports & Rules
       uses: actions/upload-artifact@v4
       with:
-        name: wazuh-rules
-        path: wazuh_rules/
+        name: pipeline-output
+        path: |
+          wazuh_rules/
+          docs/coverage-report.md
+          docs/quality-report.md
